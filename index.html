@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/ >
+		<title>AUDITING THE EFFECTIVENESS OF GROUTED ROCKBOLT SYSTEM IN UNDERGROUND MINES</title>
+
+    <!-- Boostrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Google fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+
+		<!-- D3.js -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+
+		<style>
+			body {
+				font-family: 'Open Sans', sans-serif;
+				font-size: 13px;
+				font-weight: 300;
+				fill: #242424;
+				text-align: center;
+				text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+				cursor: default;
+			}
+
+			.legend {
+				font-family: 'Raleway', sans-serif;
+				fill: #333333;
+			}
+
+			.tooltip {
+				fill: #333333;
+			}
+		</style>
+
+	</head>
+	<body>
+    <header class="container">
+      <h3>AUDITING THE EFFECTIVENESS OF GROUTED ROCKBOLT SYSTEM IN UNDERGROUND MINES</h3><hr>
+    </header>
+    <div id="before" style="display:block;">
+      <select class="form-control"
+      style="display:center; width:25%; margin:200px auto;"
+      onchange="$('#before').hide(); $('#after').show();">
+        <option>-- Select Bolt Type --</option>
+        <option>Grouted Rockbolt - Rebar (Cement)</option>
+        <option disabled="true">Grouted Rockbolt - Dywidag (Cement)</option>
+        <option disabled="true">Grouted Rockbolt - Rebar (Resin)</option>
+        <option disabled="true">Grouted Rockbolt - Dywidag (Resin)</option>
+      </select>
+    </div>
+
+    </div>
+    <div id="after" class="row" style="display:none;">
+      <div class="col-xs-4 col-md-4 form-horizontal" style="margin: 25px;">
+        <div class="form-group">
+          <label for="boltQuality" class="col-sm-5 control-label">Bolt Quality (in N/m2)</label>
+          <div class="col-sm-5"><input class="form-control" id="boltQuality" placeholder="Bolt Quality in N/m2"></div>
+        </div>
+        <div class="form-group">
+          <label for="groutMixture" class="col-sm-5 control-label">Grout Mixture (in %)</label>
+          <div class="col-sm-5"><input class="form-control" id="groutMixture" placeholder="Grout Mixture in %"></div>
+        </div>
+        <div class="form-group">
+          <label for="boreHoleDiameter" class="col-sm-5 control-label">Bore Hole Diameter (in mm)</label>
+          <div class="col-sm-5"><input class="form-control" id="boreHoleDiameter" placeholder="Bore Hole Diameter in mm"></div>
+        </div>
+        <div class="form-group">
+          <label for="boltSpacing" class="col-sm-5 control-label">Bolt Spacing (in meters)</label>
+          <div id="boltSpacing" class="col-sm-5">
+            <input class="form-control" id="boltSpacingStd" placeholder="Standard Bolt Spacing in meters">
+            <input class="form-control" id="boltSpacingCurr" placeholder="Calculated Bolt Spacing in meters">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="facePlate" class="col-sm-5 control-label">Face Plate (in %)</label><br>
+          <div class="col-sm-5">
+            <input type="checkbox" onclick="facePlateCheck()" id="plateExists"> Plate Exists </input>
+            <input type="checkbox" onclick="facePlateCheck()" id="edgeContact"> Edge Contact </input>
+            <input class="form-control" id="facePlate" placeholder="Face Plate in %" disabled="true">
+          </div>
+        </div>
+        <button onclick="drawRadar()" class="btn btn-default">Submit</button>
+      </div>
+
+  		<div class="radarChart col-xs-4 col-md-4"></div>
+      <div class="col-xs-3 col-md-3" id="area"></div>
+    </div>
+
+		<script src="radarChart.js"></script>
+		<script>
+      function facePlateCheck() {
+        console.log($('#plateExists')[0].value == 'on' && !($('#edgeContact')[0].value == 'on'));
+        if ($('#plateExists')[0].checked && !($('#edgeContact')[0].checked)) {
+          $('#facePlate')[0].disabled = false;
+        } else {
+          $('#facePlate')[0].disabled = true;
+          $('#facePlate')[0].value = '';
+        }
+      }
+
+      function boltQualityRank(value) {
+        if (558 < value) return 5;
+        if (546 < value && value <= 558) return 4;
+        if (534 < value && value <= 546) return 3;
+        if (522 < value && value <= 534) return 2;
+        if (510 < value && value <= 522) return 1;
+        else return 0;
+      }
+
+      function groutMixtureRank(value) {
+        if (28 < value && value < 32) return 5;
+        if ((25 < value && value <= 28) || (32 <= value && value < 35)) return 4;
+        if ((22 < value && value <= 25) || (35 <= value && value < 38)) return 3;
+        if ((19 < value && value <= 22) || (38 <= value && value < 41)) return 2;
+        if ((16 < value && value <= 19) || (41 <= value && value < 44)) return 1;
+        else return 0;
+      }
+
+      function boreHoleDiameterRank(value) {
+        if (31 < value && value < 33) return 5;
+        if ((30 < value && value <= 31) || (33 <= value && value < 34)) return 4;
+        if (34 <= value && value < 35) return 3;
+        if (35 <= value && value <= 36) return 2;
+        if (36 <= value && value <= 37) return 1;
+        else return 0;
+      }
+
+      function boltSpacingRank(value) {
+        if (0 <= value && value < 5) return 5;
+        if (5 <= value && value < 10) return 4;
+        if (10 <= value && value < 15) return 3;
+        if (15 <= value && value < 20) return 2;
+        if (20 <= value && value < 25) return 1;
+        else return 0;
+      }
+
+      function facePlateRank(value) {
+        if (80 < value) return 5;
+        if (60 < value && value <= 80) return 4;
+        if (40 < value && value <= 60) return 3;
+        if (20 < value && value <= 40) return 2;
+        if (0 < value && value <= 20) return 1;
+        else return 0;
+      }
+
+      function drawRadar() {
+        var margin = {top: 80, right: 100, bottom: 100, left: 100},
+  				width = Math.min(700, window.innerWidth - 10) - margin.left - margin.right,
+  				height = Math.min(width, window.innerHeight - margin.top - margin.bottom - 20);
+
+  			var color = d3.scale.ordinal()
+  				.range(["#EDC951","#CC333F","#00A0B0"]);
+
+  			var radarChartOptions = {
+  			  w: width*0.8,
+  			  h: height*0.8,
+  			  margin: margin,
+  			  maxValue: 5,
+  			  levels: 5,
+  			  roundStrokes: true,
+  			  color: color
+  			};
+
+        var deviation = 100*Math.abs($('#boltSpacingStd')[0].value - $('#boltSpacingCurr')[0].value)/$('#boltSpacingStd')[0].value
+
+        var data = [
+          [
+            {axis:"Bolt Quality", value:boltQualityRank($('#boltQuality')[0].value)},
+    				{axis:"Grout Mixture", value:groutMixtureRank($('#groutMixture')[0].value)},
+    				{axis:"Bore Hole Diameter", value:boreHoleDiameterRank($('#boreHoleDiameter')[0].value)},
+    				{axis:"Bolt Spacing", value:boltSpacingRank(deviation)},
+    				{axis:"Face Plate", value:facePlateRank($('#facePlate')[0].value) | 0}
+          ]
+        ];
+
+        var area = 0, bestarea = 0;
+        var len = data[0].length;
+        var degree = 2*Math.PI/len;
+
+        for (var i = 0; i < data[0].length; i++) {
+          area += .5*data[0][i].value*data[0][(i+1)%len].value*Math.sin(degree);
+          bestarea += .5*5*5*Math.sin(degree);
+        }
+        var areaDeviation = 100*(bestarea-area)/bestarea;
+        var areadiv = $('#area')[0];
+        areadiv.innerHTML = "<b>Area = " + area.toPrecision(3).toString() + " units</b><br><br>" +
+                            "<b>Ideal Area = " + bestarea.toPrecision(3).toString() + " units</b><br><br>" +
+                            "<b>Deviation = " + areaDeviation.toPrecision(3).toString() + "%</b>";
+
+        RadarChart(".radarChart", data, radarChartOptions);
+      }
+		</script>
+	</body>
+</html>
