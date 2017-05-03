@@ -5,20 +5,20 @@
 		<title>AUDITING THE EFFECTIVENESS OF GROUTED ROCKBOLT SYSTEM IN UNDERGROUND MINES</title>
 
     <!-- Boostrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="bootstrap.min.css">
 
 		<!-- Google fonts -->
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
-		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+		<!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'> -->
 
 		<!-- D3.js -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+		<script src="d3.min.js" charset="utf-8"></script>
+    <script src="jquery-3.2.1.slim.min.js"></script>
 
 		<style>
 			body {
-				font-family: 'Open Sans', sans-serif;
-				font-size: 13px;
+				font-family: "Times New Roman", Times, serif;
+				font-size: 14px;
 				font-weight: 300;
 				fill: #242424;
 				text-align: center;
@@ -34,6 +34,18 @@
 			.tooltip {
 				fill: #333333;
 			}
+
+      table {
+        border-collapse: collapse;
+        width: 65%;
+        margin: auto;
+      }
+
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: center;
+        padding: 8px;
+      }
 		</style>
 
 	</head>
@@ -41,6 +53,7 @@
     <header class="container">
       <h3>AUDITING THE EFFECTIVENESS OF GROUTED ROCKBOLT SYSTEM IN UNDERGROUND MINES</h3><hr>
     </header>
+
     <div id="before" style="display:block;">
       <select class="form-control"
       style="display:center; width:25%; margin:200px auto;"
@@ -53,45 +66,51 @@
       </select>
     </div>
 
-    </div>
-    <div id="after" class="row" style="display:none;">
-      <div class="col-xs-4 col-md-4 form-horizontal" style="margin: 25px;">
-        <div class="form-group">
-          <label for="boltQuality" class="col-sm-5 control-label">Bolt Quality (in N/m2)</label>
-          <div class="col-sm-5"><input class="form-control" id="boltQuality" placeholder="Bolt Quality in N/m2"></div>
-        </div>
-        <div class="form-group">
-          <label for="groutMixture" class="col-sm-5 control-label">Grout Mixture (in %)</label>
-          <div class="col-sm-5"><input class="form-control" id="groutMixture" placeholder="Grout Mixture in %"></div>
-        </div>
-        <div class="form-group">
-          <label for="boreHoleDiameter" class="col-sm-5 control-label">Bore Hole Diameter (in mm)</label>
-          <div class="col-sm-5"><input class="form-control" id="boreHoleDiameter" placeholder="Bore Hole Diameter in mm"></div>
-        </div>
-        <div class="form-group">
-          <label for="boltSpacing" class="col-sm-5 control-label">Bolt Spacing (in meters)</label>
-          <div id="boltSpacing" class="col-sm-5">
-            <input class="form-control" id="boltSpacingStd" placeholder="Standard Bolt Spacing in meters">
-            <input class="form-control" id="boltSpacingCurr" placeholder="Calculated Bolt Spacing in meters">
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="facePlate" class="col-sm-5 control-label">Face Plate (in %)</label><br>
-          <div class="col-sm-5">
-            <input type="checkbox" onclick="facePlateCheck()" id="plateExists"> Plate Exists </input>
-            <input type="checkbox" onclick="facePlateCheck()" id="edgeContact"> Edge Contact </input>
-            <input class="form-control" id="facePlate" placeholder="Face Plate in %" disabled="true">
-          </div>
-        </div>
-        <button onclick="drawRadar()" class="btn btn-default">Submit</button>
-      </div>
 
-  		<div class="radarChart col-xs-4 col-md-4"></div>
-      <div class="col-xs-3 col-md-3" id="area"></div>
+    <div id="after" class="form-horizontal" style="margin: 25px; display:none;">
+      <div class="form-group">
+        <label for="boltQuality" class="col-sm-5 control-label">Bolt Quality (in N/mm2)</label>
+        <div class="col-sm-3"><input class="form-control" id="boltQuality" placeholder="Bolt Quality in N/mm2"></div>
+      </div>
+      <div class="form-group">
+        <label for="groutMixture" class="col-sm-5 control-label">Water in Grout Mixture (in %)</label>
+        <div class="col-sm-3"><input class="form-control" id="groutMixture" placeholder="Water in Grout Mixture in %"></div>
+      </div>
+      <div class="form-group">
+        <label for="boreHoleDiameter" class="col-sm-5 control-label">Bore Hole Diameter (in mm)</label>
+        <div class="col-sm-3"><input class="form-control" id="boreHoleDiameter" placeholder="Bore Hole Diameter in mm"></div>
+      </div>
+      <div class="form-group">
+        <label for="boltSpacing" class="col-sm-5 control-label">Bolt Spacing (in meters)</label>
+        <div id="boltSpacing" class="col-sm-3">
+          <input class="form-control" id="boltSpacingStd" placeholder="Standard Bolt Spacing in meters">
+          <input class="form-control" id="boltSpacingCurr" placeholder="Calculated Bolt Spacing in meters">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="facePlate" class="col-sm-5 control-label">Face Plate (in %)</label><br>
+        <div class="col-sm-3">
+          <input type="checkbox" onclick="facePlateCheck()" id="plateExists"> Plate Exists </input><br>
+          <input type="checkbox" onclick="facePlateCheck()" id="edgeContact"> Edge Contact </input><br>
+          <input class="form-control" id="facePlate" placeholder="Face Plate in %" disabled="true">
+        </div>
+      </div>
+      <button onclick="drawRadar()" class="btn btn-primary">Submit</button>
+    </div>
+
+    <div id="conclusion" style="display:none;">
+      <div class="radarChart col-xs-6 col-md-6"></div>
+      <div class="col-xs-6 col-md-6" id="area"></div><br>
+      <button onclick="gohome()" class="btn btn-primary" style="margin:auto; margin-top:10px;">Try Another Data-Set</button>
     </div>
 
 		<script src="radarChart.js"></script>
 		<script>
+      function gohome() {
+        $('#conclusion').hide();
+        $('#after').show();
+      }
+
       function facePlateCheck() {
         console.log($('#plateExists')[0].value == 'on' && !($('#edgeContact')[0].value == 'on'));
         if ($('#plateExists')[0].checked && !($('#edgeContact')[0].checked)) {
@@ -123,9 +142,9 @@
       function boreHoleDiameterRank(value) {
         if (31 < value && value < 33) return 5;
         if ((30 < value && value <= 31) || (33 <= value && value < 34)) return 4;
-        if (34 <= value && value < 35) return 3;
-        if (35 <= value && value <= 36) return 2;
-        if (36 <= value && value <= 37) return 1;
+        if ((29 < value && value <= 30) || (34 <= value && value < 35)) return 3;
+        if ((28 < value && value <= 29) || (35 <= value && value <= 36)) return 2;
+        if ((27 < value && value <= 28) || (36 <= value && value <= 37)) return 1;
         else return 0;
       }
 
@@ -187,11 +206,23 @@
         }
         var areaDeviation = 100*(bestarea-area)/bestarea;
         var areadiv = $('#area')[0];
-        areadiv.innerHTML = "<b>Area = " + area.toPrecision(3).toString() + " units</b><br><br>" +
-                            "<b>Ideal Area = " + bestarea.toPrecision(3).toString() + " units</b><br><br>" +
-                            "<b>Deviation = " + areaDeviation.toPrecision(3).toString() + "%</b>";
+        areadiv.innerHTML = "% Compliance of Current Safety System = <b>" + (100-areaDeviation).toPrecision(3).toString() + "%</b><br><br>" +
+                            "Ideal Safety System = <b>100%</b><br><br>" +
+                            "% Deviation from Ideal Safety System = <b>" + areaDeviation.toPrecision(3).toString() + "%</b><br><hr>" +
+                            "<h4>Parameters that require immediate action:</h4><br>";
+
+        var in_words = ['Immediate Action', 'Poor', 'Very Poor', 'Good', 'Very Good', 'Excellent Condition'];
+        var in_color = ['darkred', 'red', 'orange', 'black', 'lightgreen', 'green'];
+        var tmp = "<table><tr><th>Parameter</th><th>Action/Remark</th></tr>";
+        for (var i in data[0]) {
+            tmp += "<tr><td>" + data[0][i].axis + '</td><td style="color:' + in_color[data[0][i].value] + ';"><b>' + in_words[data[0][i].value] + "</b></td></tr>";
+        }
+        areadiv.innerHTML += tmp + "</table>";
 
         RadarChart(".radarChart", data, radarChartOptions);
+
+        $('#after').hide();
+        $('#conclusion').show();
       }
 		</script>
 	</body>
